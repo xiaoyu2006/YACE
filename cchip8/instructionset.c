@@ -45,7 +45,7 @@ Instruction instructions[] = {
     { // LD(VX, VY)
         .mask = 0xf00f, .pattern = 0x8000, .args = 2,
         .arg[0] = STATIC_INST_ARG_INIT(0x0f00, 8),
-        .arg[1] = STATIC_INST_ARG_INIT(0x00ff, 0)
+        .arg[1] = STATIC_INST_ARG_INIT(0x00f0, 4)
     },
     { // OR(VX, VY)
         .mask = 0xf00f, .pattern = 0x8001, .args = 2,
