@@ -38,6 +38,7 @@ add_executable(QChip8
   cchip8/instructionset.c
   cchip8/interface.h
   cchip8/interface.c
+  cchip8/errors.h
 )
 
 target_link_libraries(QChip8 PRIVATE Qt5::Widgets)
@@ -56,6 +57,7 @@ add_executable(CChip8Tests
   cchip8/instructionset.c
   cchip8/interface.h
   cchip8/interface.c
+  cchip8/errors.h
 )
 
 add_test(CChip8Tests CChip8Tests)

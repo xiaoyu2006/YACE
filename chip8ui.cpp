@@ -55,8 +55,9 @@ void Chip8UI::timerEvent(QTimerEvent *event)
             tick(cpu, interface);
             chip8Timer = 0;
         }
-        step(cpu, interface);
-        update();
+        CChip8Errors error = step(cpu, interface);
+        if (error == UpdateScreen) update();
+        // TODO: Error handling.
     } else {
         event->ignore();
     }

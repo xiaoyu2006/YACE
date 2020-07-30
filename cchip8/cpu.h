@@ -13,6 +13,7 @@
 
 #include "instructionset.h"
 #include "interface.h"
+#include "errors.h"
 
 #define MEMORY_SIZE 4096
 #define REGISTERS_NUM 16
@@ -55,14 +56,14 @@ extern "C" {
 extern uint8_t fontSet[FONT_SET_SIZE];
 
 extern CPU* makeCPU(void);
-extern void readROM(CPU* cpu, const char* filename);
+extern CChip8Errors readROM(CPU* cpu, const char* filename);
 extern void nextInstruction(CPU* cpu);
 extern void skipInstruction(CPU* cpu);
 extern void tick(CPU* cpu, Interface* interface);
-extern void step(CPU* cpu, Interface* interface);
+extern CChip8Errors step(CPU* cpu, Interface* interface);
 extern uint16_t fetch(CPU* cpu);
 extern DecodedInst decode(uint16_t opcode);
-extern void execute(CPU* cpu, Interface* interface, DecodedInst inst);
+extern CChip8Errors execute(CPU* cpu, Interface* interface, DecodedInst inst);
 
 #ifdef __cplusplus
 }

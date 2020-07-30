@@ -40,7 +40,7 @@ CPU* makeCPU()
     cpu->SP = -1;
     cpu->PC = MEM_START;
     // 0 to 80 for font set.
-    for (uint8_t i = 0; i < FONT_SET_SIZE; ++i) {
+    for (uint16_t i = 0; i < FONT_SET_SIZE; ++i) {
         cpu->memory[i] = fontSet[i];
     }
     return cpu;
@@ -64,12 +64,12 @@ void skipInstruction(CPU* cpu)
 *  cpu: current cpu.
 *  filename: ROM to read
 */
-void readROM(CPU* cpu, const char* filename)
+CChip8Errors readROM(CPU* cpu, const char* filename)
 {
     FILE* in = fopen(filename, "rb");
     if ( in == NULL ) {
         perror("ROM file not exists.");
-        exit(1);
+        return ROMFileNotFound;
     }
     uint16_t i = MEM_START;
     int charInt = fgetc(in);
@@ -77,10 +77,11 @@ void readROM(CPU* cpu, const char* filename)
         cpu->memory[i++] = (uint8_t) charInt;
         if ( i >= MEMORY_SIZE ) {
             perror("Invaild ROM file: too large.");
-            exit(1);
+            return ROMFileTooLarge;
         }
         charInt = fgetc(in);
     }
+    return OK;
 }
 
 void tick(CPU* cpu, Interface* interface)
@@ -104,11 +105,11 @@ void tick(CPU* cpu, Interface* interface)
 *  cpu: current cpu
 *  interface: current Interface
 */
-void step(CPU* cpu, Interface* interface)
+CChip8Errors step(CPU* cpu, Interface* interface)
 {
     uint16_t opcode = fetch(cpu);
     DecodedInst inst = decode(opcode);
-    execute(cpu, interface, inst);
+    return execute(cpu, interface, inst);
 }
 
 /*
@@ -163,7 +164,7 @@ DecodedInst decode(uint16_t opcode)
 *  interface: current Interface
 *  inst: Decoded instruction
 */
-void execute(CPU* cpu, Interface* interface, DecodedInst inst)
+CChip8Errors execute(CPU* cpu, Interface* interface, DecodedInst inst)
 {
     // TODO: Debug
     switch (inst.pattern) {
@@ -172,14 +173,14 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
     {
         clearDisplay(interface);
         nextInstruction(cpu);
-        break;
+        return UpdateScreen;
     }
 
     case 0x00ee: // RET
     {
         if (cpu->SP == -1) {
             perror("Stack underflow.");
-            exit(1);
+            return StackUnderflow;
         }
         cpu->PC = cpu->stack[cpu->SP--];
         break;
@@ -195,7 +196,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
     {
         if (cpu->SP == 15) {
             perror("Stack overflow.");
-            exit(1);
+            return StackOverFlow;
         }
         cpu->stack[++cpu->SP] = cpu->PC + 2;
         cpu->PC = inst.args[0];
@@ -332,7 +333,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
 
     case 0xb000: // JP(V0, ADDR)
     {
-        cpu->PC = cpu->registers[inst.args[0]] + inst.args[1];
+        cpu->PC = cpu->registers[0] + inst.args[1];
         break;
     }
 
@@ -347,9 +348,8 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
     {
         if ( cpu->I > (MEMORY_SIZE - 1 - inst.args[2]) ) {
             perror("Memory out of bounds");
-            exit(1);
+            return MemoryOutOfBounds;
         } else {
-
             cpu->registers[0xf] = 0;
             for (int i = 0 ; i < inst.args[2] ; ++i) {
                 const uint8_t line = cpu->memory[cpu->I + i];
@@ -365,9 +365,8 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
                 }
             }
             nextInstruction(cpu);
-
+            return UpdateScreen;
         }
-        break;
     }
 
     case 0xe09e: // SKP(VX)
@@ -400,7 +399,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
     case 0xf00a: // LD(VX, N)
     {
         const int16_t keyPressed = waitKey(interface);
-        if ( keyPressed == KEY_NOT_PRESSED ) return;
+        if ( keyPressed == KEY_NOT_PRESSED ) return OK;
 
         cpu->registers[inst.args[0]] = keyPressed;
         nextInstruction(cpu);
@@ -435,7 +434,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
     {
         if (cpu->registers[inst.args[1]] > 0xf) {
             perror("Invalid digit.");
-            exit(1);
+            return InvalidDigit;
         } else {
             cpu->I += cpu->registers[inst.args[1]] * 5;
             nextInstruction(cpu);
@@ -449,7 +448,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
 
         if (I > (MEMORY_SIZE - 3)) {
             perror("Memory out of bounds.");
-            exit(1);
+            return MemoryOutOfBounds;
         } else {
             uint8_t x = cpu->registers[inst.args[1]];
             const uint8_t a = x / 100;
@@ -472,7 +471,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
         const uint16_t I = cpu->I;
         if (I > (MEMORY_SIZE - 1 - inst.args[1])) {
             perror("Memory out of bounds.");
-            exit(1);
+            return MemoryOutOfBounds;
         } else {
             for (uint16_t i = 0 ; i <= inst.args[1] ; ++i) {
                 cpu->memory[I + i] = cpu->registers[i];
@@ -487,7 +486,7 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
         const uint16_t I = cpu->I;
         if (I > (MEMORY_SIZE - 1 - inst.args[0])) {
             perror("Memory out of bounds.");
-            exit(1);
+            return MemoryOutOfBounds;
         } else {
             for (uint16_t i = 0 ; i <= inst.args[0]; ++i) {
                 cpu->registers[i] = cpu->memory[I + i];
@@ -500,8 +499,10 @@ void execute(CPU* cpu, Interface* interface, DecodedInst inst)
     default: // DW
     {
         perror("Unknown instruction.");
-        exit(1);
+        return UnknownInstruction;
     }
 
     }
+
+    return OK;
 }
