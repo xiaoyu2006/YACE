@@ -34,9 +34,22 @@ To test
 $ make test
 ```
 
-### ROMS
+## Gameplay
 
-Visit https://github.com/dmatlack/chip8/tree/master/roms to get some ROMs.
+### ROMs
+
+Visit https://github.com/dmatlack/chip8/tree/master/roms to get some ROMs. Not every ROM is tested.
+
+### Keys
+
+`QChip8` maps the following keys for *KeyIndex 0 to 15* in `CChip8`.
+
+```
+1234
+qwer
+asdf
+zxcv
+```
 
 ## TODOs
 - [ ] Add sound
