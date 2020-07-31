@@ -77,4 +77,9 @@ CMakefiles/
 CMakeScripts/
 cmake_install.cmake
 CMakeLists.txt.user
-
+CChip8Tests
+CChip8Tests_autogen/
+CTestTestfile.cmake
+QChip8
+QChip8_autogen/
+Testing/
