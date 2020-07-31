@@ -34,6 +34,10 @@ To test
 $ make test
 ```
 
+### ROMS
+
+Visit https://github.com/dmatlack/chip8/tree/master/roms to get some ROMs.
+
 ## TODOs
 - [ ] Add sound
 - [ ] Better error handling.
