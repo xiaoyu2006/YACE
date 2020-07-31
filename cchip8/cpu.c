@@ -436,7 +436,7 @@ CChip8Errors execute(CPU* cpu, Interface* interface, DecodedInst inst)
             perror("Invalid digit.");
             return InvalidDigit;
         } else {
-            cpu->I += cpu->registers[inst.args[1]] * 5;
+            cpu->I = cpu->registers[inst.args[1]] * 5;
             nextInstruction(cpu);
         }
         break;
