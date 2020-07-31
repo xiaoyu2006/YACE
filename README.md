@@ -11,7 +11,7 @@
 
 ### Install Qt
 
-Both `Qt 5.12` and `At 5.15` are tested. See https://wiki.qt.io/Main 's **Install / Build** part, and make sure CMake can detect it. You may want to modify `CMAKE_PREFIX_PATH`.
+Both `Qt 5.12` and `Qt 5.15` are tested. See https://wiki.qt.io/Main 's **Install / Build** part, and make sure CMake can detect it. You may want to modify `CMAKE_PREFIX_PATH`.
 
 
 ### Compile

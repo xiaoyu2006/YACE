@@ -166,7 +166,6 @@ DecodedInst decode(uint16_t opcode)
 */
 CChip8Errors execute(CPU* cpu, Interface* interface, DecodedInst inst)
 {
-    // TODO: Debug
     switch (inst.pattern) {
 
     case 0x00e0: // CLS
