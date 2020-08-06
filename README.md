@@ -55,4 +55,3 @@ zxcv
 - [ ] Add sound
 - [ ] Better error handling.
 - [ ] Document for `CChip8`
-- [ ] ***Beep!***
