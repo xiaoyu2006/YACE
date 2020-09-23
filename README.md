@@ -4,8 +4,8 @@
 
 ## What's included
 - `QChip8`: Executable for the emulator using Qt.
-   - `CChip8`: Core chip8 emulator for calculation only.
-- `CChip8Tests`: Tests for `CChip8` using QtTest.
+- `CChip8`: Core chip8 emulator for calculation only. Provided as a dynamic library.
+- `CPUTests`: Tests for `CChip8` using QtTest.
 
 ## How to build
 
@@ -19,9 +19,8 @@ Both `Qt 5.12` and `Qt 5.15` are tested. See https://wiki.qt.io/Main 's **Instal
 ```bash
 $ git clone https://github.com/xiaoyu2006/YACE.git
 $ cd YACE
-# If CMake doesn't work.
-$ export CMAKE_PREFIX_PATH=< where are your Qt5Config.cmake and qt5-config.cmake >
-$ cmake .
+$ mkdir build && cd build
+$ cmake ..
 ```
 
 To build
