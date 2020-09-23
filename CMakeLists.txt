@@ -15,6 +15,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+add_subdirectory(cchip8)
+
 add_executable(QChip8
   main.cpp
 
@@ -31,16 +33,11 @@ add_executable(QChip8
 
   keymap.h
   keymap.cpp
-
-  cchip8/cpu.h
-  cchip8/cpu.c
-  cchip8/instructionset.h
-  cchip8/instructionset.c
-  cchip8/interface.h
-  cchip8/interface.c
-  cchip8/errors.h
 )
 
+target_include_directories(QChip8 PUBLIC ${CCHIP8_INCLUDE})
+
+target_link_libraries(QChip8 PUBLIC CChip8)
 target_link_libraries(QChip8 PRIVATE Qt5::Widgets)
 
 
@@ -48,19 +45,10 @@ target_link_libraries(QChip8 PRIVATE Qt5::Widgets)
 enable_testing()
 
 find_package(Qt5Test REQUIRED)
-add_executable(CChip8Tests
-  cputests.cpp
-
-  cchip8/cpu.h
-  cchip8/cpu.c
-  cchip8/instructionset.h
-  cchip8/instructionset.c
-  cchip8/interface.h
-  cchip8/interface.c
-  cchip8/errors.h
+add_executable(CPUTests
+ cputests.cpp
 )
+target_include_directories(CPUTests PUBLIC ${CCHIP8_INCLUDE})
+target_link_libraries(CPUTests CChip8 Qt5::Test)
 
-add_test(CChip8Tests CChip8Tests)
-
-target_link_libraries(CChip8Tests Qt5::Test)
-
+add_test(CPUTests CPUTests)

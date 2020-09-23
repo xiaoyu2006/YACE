@@ -7,7 +7,7 @@
 #include <QBrush>
 #include <QPaintEvent>
 
-#include "cchip8/interface.h"
+#include <interface.h>
 
 #define BLACK QColor(0, 0, 0)
 #define GREEN QColor(0, 255, 0)

@@ -9,8 +9,8 @@
 
 #include "keymap.h"
 
-#include "cchip8/cpu.h"
-#include "cchip8/interface.h"
+#include <cpu.h>
+#include <interface.h>
 
 #define UPDATE_MILLISEC 2
 

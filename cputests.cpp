@@ -1,6 +1,6 @@
 ﻿#include <QtTest/QtTest>
 
-#include "cchip8/cpu.h"
+#include <cpu.h>
 
 // Macros are specific to this test
 #define LOADDATA(dataPos, data) cpu->memory[MEM_START + (dataPos)] = (data)

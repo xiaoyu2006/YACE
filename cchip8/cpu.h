@@ -11,9 +11,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "instructionset.h"
-#include "interface.h"
-#include "errors.h"
+#include <instructionset.h>
+#include <interface.h>
+#include <errors.h>
 
 #define MEMORY_SIZE 4096
 #define REGISTERS_NUM 16

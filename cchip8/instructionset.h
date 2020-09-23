@@ -11,8 +11,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "cpu.h"
-#include "interface.h"
+#include <cpu.h>
+#include <interface.h>
 
 // Arguments for a instruction
 typedef struct InstArg
