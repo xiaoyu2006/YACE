@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(QChip8 LANGUAGES C CXX)
+project(YACE LANGUAGES C CXX)
 
 # Program
 
