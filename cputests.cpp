@@ -3,9 +3,8 @@
 #include <cpu.h>
 
 // Macros are specific to this test
-#define LOADDATA(dataPos, data) cpu->memory[MEM_START + (dataPos)] = (data)
-#define EXECUTE QBENCHMARK_ONCE { step(cpu, interface); }
-#define DISPLAY(x, y) interface->screen[x * DISPLAY_WIDTH + y]
+#define LOADDATA(dataPos, data) { cpu->memory[MEM_START + (dataPos)] = (data); }
+#define DISPLAY(x, y) (interface->screen[(x) * DISPLAY_WIDTH + (y)])
 
 class CPUTests : public QObject {
     Q_OBJECT
@@ -32,7 +31,7 @@ private slots:
         LOADDATA(1, 0xe0);
         interface->screen[0] = 1; // See if it really clears
 
-        EXECUTE
+        step(cpu, interface);
 
         for (int i = 0 ; i < TOT_CHAR_COUNT ; ++i) { QCOMPARE(interface->screen[i], 0); }
     }
@@ -44,7 +43,7 @@ private slots:
         cpu->SP = 0x2;
         cpu->stack[0x2] = 0xf;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0xf);
         QCOMPARE(cpu->SP, 0x1);
@@ -55,7 +54,7 @@ private slots:
         LOADDATA(0, 0x13);
         LOADDATA(1, 0x33);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x333);
     }
@@ -66,7 +65,7 @@ private slots:
         LOADDATA(1, 0x62);
         const uint16_t PC = cpu->PC;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->SP, 0);
         QCOMPARE(cpu->stack[cpu->SP], PC + 2);
@@ -78,7 +77,7 @@ private slots:
         LOADDATA(0, 0x3a);
         LOADDATA(1, 0xbb);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x202);
     }
@@ -89,7 +88,7 @@ private slots:
         LOADDATA(1, 0xbb);
         cpu->registers[0xa] = 0xbb;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x204);
     }
@@ -99,7 +98,7 @@ private slots:
         LOADDATA(0, 0x4a);
         LOADDATA(1, 0xcc);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x204);
     }
@@ -110,7 +109,7 @@ private slots:
         LOADDATA(1, 0xcc);
         cpu->registers[0xa] = 0xcc;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x202);
     }
@@ -122,7 +121,7 @@ private slots:
         cpu->registers[0xa] = 0x5;
         cpu->registers[0xb] = 0x5;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x204);
     }
@@ -134,7 +133,7 @@ private slots:
         cpu->registers[0xa] = 0x5;
         cpu->registers[0xb] = 0x6;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x202);
     }
@@ -145,7 +144,7 @@ private slots:
         LOADDATA(1, 0xbb);
         cpu->registers[0xa] = 0x10;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0xbb);
     }
@@ -156,7 +155,7 @@ private slots:
         LOADDATA(1, 0xbb);
         cpu->registers[0xa] = 0x10;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0x10 + 0xbb);
     }
@@ -167,7 +166,7 @@ private slots:
         LOADDATA(1, 0xb0);
         cpu->registers[0xb] = 0x8;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0x8);
     }
@@ -179,7 +178,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x4;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0x7);
     }
@@ -191,7 +190,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x4;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0);
     }
@@ -203,7 +202,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x3;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0);
     }
@@ -215,7 +214,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x4;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0x7);
         QCOMPARE(cpu->registers[0xf], 0);
@@ -228,7 +227,7 @@ private slots:
         cpu->registers[0xa] = 0xff;
         cpu->registers[0xb] = 0xff;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0xfe);
         QCOMPARE(cpu->registers[0xf], 1);
@@ -241,7 +240,7 @@ private slots:
         cpu->registers[0xa] = 0x4;
         cpu->registers[0xb] = 0x2;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 2);
         QCOMPARE(cpu->registers[0xf], 1);
@@ -254,7 +253,7 @@ private slots:
         cpu->registers[0xa] = 0x2;
         cpu->registers[0xb] = 0x3;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 255);
         QCOMPARE(cpu->registers[0xf], 0);
@@ -266,7 +265,7 @@ private slots:
         LOADDATA(1, 0xb6);
         cpu->registers[0xa] = 0x3;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0x3 >> 1);
         QCOMPARE(cpu->registers[0xf], 1);
@@ -279,7 +278,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x2;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 255);
         QCOMPARE(cpu->registers[0xf], 0);
@@ -292,7 +291,7 @@ private slots:
         cpu->registers[0xa] = 0x2;
         cpu->registers[0xb] = 0x3;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 1);
         QCOMPARE(cpu->registers[0xf], 1);
@@ -304,7 +303,7 @@ private slots:
         LOADDATA(1, 0xbe);
         cpu->registers[0xa] = 0x3;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0x3 << 1);
         QCOMPARE(cpu->registers[0xf], 0);
@@ -317,7 +316,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x4;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x204);
     }
@@ -329,7 +328,7 @@ private slots:
         cpu->registers[0xa] = 0x3;
         cpu->registers[0xb] = 0x3;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x202);
     }
@@ -339,7 +338,7 @@ private slots:
         LOADDATA(0, 0xa9);
         LOADDATA(1, 0x99);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->I, 0x999);
     }
@@ -350,7 +349,7 @@ private slots:
         LOADDATA(1, 0x00);
         cpu->registers[0x0] = 0x2;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x2 + 0x300);
     }
@@ -362,7 +361,7 @@ private slots:
         cpu->registers[0x1] = 1;
         cpu->registers[0x2] = 1;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(DISPLAY(1, 1), 1);
         QCOMPARE(DISPLAY(2, 1), 1);
@@ -379,7 +378,7 @@ private slots:
         cpu->registers[0x1] = 1;
         cpu->registers[0x2] = 1;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(DISPLAY(1, 1), 0);
         QCOMPARE(DISPLAY(2, 1), 0);
@@ -399,7 +398,7 @@ private slots:
         cpu->registers[0xa] = 4;
         setKey(interface, 4);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x204);
     }
@@ -411,7 +410,7 @@ private slots:
         cpu->registers[0xa] = 1;
         setKey(interface, 4);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x202);
     }
@@ -423,7 +422,7 @@ private slots:
         cpu->registers[0xb] = 4;
         setKey(interface, 4);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x202);
     }
@@ -435,7 +434,7 @@ private slots:
         cpu->registers[0xb] = 1;
         setKey(interface, 4);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->PC, 0x204);
     }
@@ -446,7 +445,7 @@ private slots:
         LOADDATA(1, 0x07);
         cpu->DT = 0xf;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xa], 0xf);
     }
@@ -459,7 +458,7 @@ private slots:
         LOADDATA(3, 0x07);
         setKey(interface, 5);
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->registers[0xb], 5);
     }
@@ -470,7 +469,7 @@ private slots:
         LOADDATA(1, 0x15);
         cpu->registers[0xb] = 0xf;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->DT, 0xf);
     }
@@ -481,7 +480,7 @@ private slots:
         LOADDATA(1, 0x18);
         cpu->registers[0xa] = 0xf;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->ST, 0xf);
     }
@@ -493,7 +492,7 @@ private slots:
         cpu->I = 0xe;
         cpu->registers[0xa] = 0xf;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->I, 0xe + 0xf);
     }
@@ -504,7 +503,7 @@ private slots:
         LOADDATA(1, 0x29);
         cpu->registers[0xa] = 0xa;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->I, 0xa * 5);
     }
@@ -516,7 +515,7 @@ private slots:
         cpu->registers[0xa] = 0x7b;
         cpu->I = 0x300;
 
-        EXECUTE
+        step(cpu, interface);
 
         QCOMPARE(cpu->memory[0x300], 1);
         QCOMPARE(cpu->memory[0x301], 2);
@@ -532,7 +531,7 @@ private slots:
           cpu->registers[i] = i;
         }
 
-        EXECUTE
+        step(cpu, interface);
 
         for (uint8_t i = 0; i <= 0xb; i++) {
           QCOMPARE(cpu->memory[cpu->I + i], i);
@@ -549,7 +548,7 @@ private slots:
           cpu->memory[cpu->I + i] = i;
         }
 
-        EXECUTE
+        step(cpu, interface);
 
         for (uint8_t i = 0; i <= 0xa; i++) {
           QCOMPARE(cpu->registers[i], i);

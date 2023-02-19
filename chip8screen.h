@@ -1,7 +1,7 @@
 #ifndef CHIP8SCREEN_H
 #define CHIP8SCREEN_H
 
-#include <QWidget>
+#include <QtWidgets>
 #include <QPaintDevice>
 #include <QPainter>
 #include <QBrush>

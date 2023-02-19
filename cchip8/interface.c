@@ -1,13 +1,15 @@
 // Copyright (c) 2020 Yi
 
+#include <stdlib.h>
+#include <string.h>
 #include "interface.h"
 
 /*
 * Function: makeInterface
 * --------------------
-*  Create a Interface interface.
+*  Create a new Interface.
 *
-*  returns: pointer of the interface
+*  returns: pointer to the interface
 */
 Interface* makeInterface()
 {

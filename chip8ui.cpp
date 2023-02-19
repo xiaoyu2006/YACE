@@ -1,5 +1,10 @@
-#include "chip8ui.h"
+﻿#include "chip8ui.h"
 #include "ui_chip8ui.h"
+
+#include "keymap.h"
+#include <QMessageBox>
+#include <QDialog>
+#include <QString>
 
 Chip8UI::Chip8UI(QWidget *parent) :
     QMainWindow(parent),
@@ -56,9 +61,50 @@ void Chip8UI::timerEvent(QTimerEvent *event)
             chip8Timer = 0;
         }
         CChip8Errors error = step(cpu, interface);
-        if (error == UpdateScreen) update();
-        // TODO: Error handling.
+        switch(error) {
+        case ROMFileNotFound:
+            showErrorAndExit(tr("ROM file missing"));
+            break;
+        case ROMFileTooLarge:
+            showErrorAndExit(tr("ROM file too large"));
+            break;
+        case StackUnderflow:
+            showErrorAndExit(tr("Stack underflow"));
+            break;
+        case StackOverFlow:
+            showErrorAndExit(tr("Stack overflow"));
+            break;
+        case MemoryOutOfBounds:
+            showErrorAndExit(tr("Memory out of bounds"));
+            break;
+        case InvalidDigit:
+            showErrorAndExit(tr("Invalid digit"));
+            break;
+        case UnknownInstruction:
+            showErrorAndExit(tr("Unknown instruction"));
+            break;
+
+        case UpdateScreen:
+            update();
+            break;
+
+        case OK:
+            break;
+        }
     } else {
         event->ignore();
     }
+}
+
+void Chip8UI::showErrorAndExit(QString message)
+{
+    QString t(message + "\nDT: %1, I: %2, PC: %3, SP: %4, ST: %5");
+    QMessageBox::critical(this, "Error", t.arg(
+                              QString::number(cpu->DT),
+                              QString::number(cpu->I),
+                              QString::number(cpu->PC),
+                              QString::number(cpu->SP),
+                              QString::number(cpu->ST)));
+    killTimer(this->updateTimer);
+    this->close();
 }

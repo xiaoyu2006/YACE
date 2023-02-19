@@ -1,20 +1,14 @@
-# Yet Another Chip8 Emulator: QChip8
+# YACE: Yet Another Chip8 Emulator
 
-***Another Chip8 emulator with a better performance.***
+## Components
 
-## What's included
 - `QChip8`: Executable for the emulator using Qt.
 - `CChip8`: Core chip8 emulator for calculation only. Provided as a dynamic library.
 - `CPUTests`: Tests for `CChip8` using QtTest.
 
-## How to build
+## Building & Installing
 
-### Install Qt
-
-Both `Qt 5.12` and `Qt 5.15` are tested. See https://wiki.qt.io/Main 's **Install / Build** part, and make sure CMake can detect it. You may want to modify `CMAKE_PREFIX_PATH`.
-
-
-### Compile
+Works under Qt6.
 
 ```bash
 $ git clone https://github.com/xiaoyu2006/YACE.git

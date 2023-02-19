@@ -7,8 +7,6 @@
 #include <QTimer>
 #include <QTimerEvent>
 
-#include "keymap.h"
-
 #include <cpu.h>
 #include <interface.h>
 
@@ -35,12 +33,12 @@ protected:
 
 private:
     Ui::Chip8UI *ui;
-
     CPU* cpu;
     Interface* interface;
     int chip8Timer;
-
     uint8_t updateTimer;
+
+    void showErrorAndExit(QString message);
 };
 
 #endif // CHIP8UI_H

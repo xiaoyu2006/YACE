@@ -6,7 +6,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QFileInfo>
-#include "chip8ui.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class OnboardWindow; }

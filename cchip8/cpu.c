@@ -23,7 +23,7 @@ uint8_t fontSet[FONT_SET_SIZE] = {
 
 /*
 * Function: makeCPU
-* --------------------
+* -----------------
 *  Create a Chip-8 CPU.
 *
 *  returns: pointer of the CPU
@@ -58,7 +58,7 @@ void skipInstruction(CPU* cpu)
 
 /*
 * Function: readRom
-* --------------------
+* -----------------
 *  Read ROM into the memory.
 *
 *  cpu: current cpu.
@@ -99,7 +99,7 @@ void tick(CPU* cpu, Interface* interface)
 
 /*
 * Function: step
-* --------------------
+* --------------
 *  Next step
 *
 *  cpu: current cpu
@@ -114,7 +114,7 @@ CChip8Errors step(CPU* cpu, Interface* interface)
 
 /*
 * Function: fetch
-* --------------------
+* ---------------
 *  Fetch an operation code from memory.
 *
 *  cpu: current cpu
@@ -129,7 +129,7 @@ uint16_t fetch(CPU* cpu)
 
 /*
 * Function: decode
-* --------------------
+* ----------------
 *  Disassemble the current operation code
 *
 *  opcode: operation code.
@@ -157,7 +157,7 @@ DecodedInst decode(uint16_t opcode)
 
 /*
 * Function: execute
-* --------------------
+* -----------------
 *  Execute an instruction.
 *
 *  cpu: current cpu
@@ -338,7 +338,7 @@ CChip8Errors execute(CPU* cpu, Interface* interface, DecodedInst inst)
 
     case 0xc000: // RND(VX, NN)
     {
-        cpu->registers[inst.args[0]] = ((rand() % 0xff) & inst.args[1]);
+        cpu->registers[inst.args[0]] = ((arc4random() % 0xff) & inst.args[1]);
         nextInstruction(cpu);
         break;
     }

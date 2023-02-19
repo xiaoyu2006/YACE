@@ -5,10 +5,8 @@
 #ifndef _INTERFACE_H_
 #define _INTERFACE_H_
 
-#include <stdio.h>
 #include <stdbool.h>
 #include <inttypes.h>
-#include <stdlib.h>
 
 #define KEYMAP_LEN 16
 
@@ -24,7 +22,6 @@ typedef struct Interface {
     int16_t     keyPressed;
 } Interface;
 
-#include "cpu.h"
 
 #ifdef __cplusplus
 extern "C" {
